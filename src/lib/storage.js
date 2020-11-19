@@ -1,6 +1,8 @@
 import ScratchStorage from 'scratch-storage';
 
 import defaultProject from './default-project';
+// need to change to default-pirate-project but broken
+import defaultPirateProject from './default-pirate-project';
 
 /**
  * Wrapper for ScratchStorage which adds default web sources.
@@ -10,6 +12,7 @@ class Storage extends ScratchStorage {
     constructor () {
         super();
         this.cacheDefaultProject();
+        this.cacheDefaultPirateProject();
     }
     addOfficialScratchWebStores () {
         this.addWebStore(
@@ -68,8 +71,13 @@ class Storage extends ScratchStorage {
         };
     }
     setTranslatorFunction (translator) {
+        // eslint-disable-next-line
+        console.log('we are translating')
         this.translator = translator;
         this.cacheDefaultProject();
+        // the below line is broken because the index file needed
+        // hard boiled project
+        this.cacheDefaultPirateProject();
     }
     cacheDefaultProject () {
         const defaultProjectAssets = defaultProject(this.translator);
@@ -79,6 +87,22 @@ class Storage extends ScratchStorage {
             asset.data,
             asset.id
         ));
+    }
+    cacheDefaultPirateProject () {
+        // eslint-disable-next-line
+        console.log('caching the projects')
+        const defaultPirateProjectAssets = defaultPirateProject(this.translator);
+        defaultPirateProjectAssets.forEach(asset => {
+            // eslint-disable-next-line
+            console.log(asset)
+            this.builtinHelper._store(
+                this.AssetType[asset.assetType],
+                this.DataFormat[asset.dataFormat],
+                asset.data,
+                asset.id
+            );
+        });
+
     }
 }
 

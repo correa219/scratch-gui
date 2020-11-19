@@ -23,7 +23,7 @@ import {
 
 const messages = defineMessages({
     tipsLibraryTitle: {
-        defaultMessage: 'Choose a Tutorial',
+        defaultMessage: 'Pick a Tutorial',
         description: 'Heading for the help/tutorials library',
         id: 'gui.tipsLibrary.tutorials'
     }

@@ -17,6 +17,7 @@ const START_AUTO_UPDATING = 'scratch-gui/project-state/START_AUTO_UPDATING';
 const START_CREATING_NEW = 'scratch-gui/project-state/START_CREATING_NEW';
 const START_ERROR = 'scratch-gui/project-state/START_ERROR';
 const START_FETCHING_NEW = 'scratch-gui/project-state/START_FETCHING_NEW';
+const START_FETCHING_NEW_PIRATE = 'scratch-gui/project-state/START_FETCHING_NEW_PIRATE';
 const START_LOADING_VM_FILE_UPLOAD = 'scratch-gui/project-state/START_LOADING_VM_FILE_UPLOAD';
 const START_MANUAL_UPDATING = 'scratch-gui/project-state/START_MANUAL_UPDATING';
 const START_REMIXING = 'scratch-gui/project-state/START_REMIXING';
@@ -24,6 +25,10 @@ const START_UPDATING_BEFORE_CREATING_COPY = 'scratch-gui/project-state/START_UPD
 const START_UPDATING_BEFORE_CREATING_NEW = 'scratch-gui/project-state/START_UPDATING_BEFORE_CREATING_NEW';
 
 const defaultProjectId = '0'; // hardcoded id of default project
+// eslint-disable-next-line
+// const pirateProjectId = '1'; // hardcoded id of our cdl project
+
+const pirateProjectId = '1'; // cdl project for mouse conreolled
 
 const LoadingState = keyMirror({
     NOT_LOADED: null,
@@ -277,9 +282,26 @@ const reducer = function (state, action) {
             LoadingState.SHOWING_WITH_ID,
             LoadingState.SHOWING_WITHOUT_ID
         ].includes(state.loadingState)) {
+            // eslint-disable-next-line
+            console.log('were firing on new')
             return Object.assign({}, state, {
                 loadingState: LoadingState.FETCHING_NEW_DEFAULT,
                 projectId: defaultProjectId
+            });
+        }
+        return state;
+    case START_FETCHING_NEW_PIRATE:
+        // eslint-disable-next-line
+        console.log('Someone Find me');
+        if ([
+            LoadingState.SHOWING_WITH_ID,
+            LoadingState.SHOWING_WITHOUT_ID
+        ].includes(state.loadingState)) {
+            // eslint-disable-next-line
+            console.log("we're changing state?")
+            return Object.assign({}, state, {
+                loadingState: LoadingState.FETCHING_WITH_ID,
+                projectId: pirateProjectId
             });
         }
         return state;
@@ -475,6 +497,13 @@ const requestNewProject = needSave => {
     return {type: START_FETCHING_NEW};
 };
 
+const requestNewPirateProject = needSave => {
+    // eslint-disable-next-line
+    console.log("project state reporting for duty")
+    if (needSave) return {type: START_UPDATING_BEFORE_CREATING_NEW};
+    return {type: START_FETCHING_NEW_PIRATE};
+};
+
 const requestProjectUpload = loadingState => {
     switch (loadingState) {
     case LoadingState.NOT_LOADED:
@@ -535,6 +564,7 @@ export {
     projectError,
     remixProject,
     requestNewProject,
+    requestNewPirateProject,
     requestProjectUpload,
     saveProjectAsCopy,
     setProjectId

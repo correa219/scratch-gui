@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import bindAll from 'lodash.bindall';
 import bowser from 'bowser';
 import React from 'react';
+import PiratesMenuItem from '../../cdlComponents/pirates-menu.jsx';
 
 import VM from 'scratch-vm';
 
@@ -38,6 +39,7 @@ import {
     getIsShowingProject,
     manualUpdateProject,
     requestNewProject,
+    requestNewPirateProject,
     remixProject,
     saveProjectAsCopy
 } from '../../reducers/project-state';
@@ -169,7 +171,8 @@ class MenuBar extends React.Component {
             'handleLanguageMouseUp',
             'handleRestoreOption',
             'getSaveToComputerHandler',
-            'restoreOptionMessage'
+            'restoreOptionMessage',
+            'handleClickNewPirate'
         ]);
     }
     componentDidMount () {
@@ -190,6 +193,23 @@ class MenuBar extends React.Component {
         this.props.onRequestCloseFile();
         if (readyToReplaceProject) {
             this.props.onClickNew(this.props.canSave && this.props.canCreateNew);
+        }
+        this.props.onRequestCloseFile();
+    }
+    handleClickNewPirate () {
+        // if the project is dirty, and user owns the project, we will autosave.
+        // but if they are not logged in and can't save, user should consider
+        // downloading or logging in first.
+        // Note that if user is logged in and editing someone else's project,
+        // they'll lose their work.
+        const readyToReplaceProject = this.props.confirmReadyToReplaceProject(
+            this.props.intl.formatMessage(sharedMessages.replaceProjectWarning)
+        );
+        this.props.onRequestCloseFile();
+        if (readyToReplaceProject) {
+            this.props.onClickNewPirate(this.props.canSave && this.props.canCreateNew);
+            // eslint-disable-next-line
+            console.log("we clicked Pirate")
         }
         this.props.onRequestCloseFile();
     }
@@ -382,6 +402,13 @@ class MenuBar extends React.Component {
                                 >
                                     <MenuSection>
                                         <MenuItem
+                                            onClick={this.handleClickNewPirate}
+                                        >
+                                            {'Pirate Project'}
+                                        </MenuItem>
+                                    </MenuSection>
+                                    <MenuSection>
+                                        <MenuItem
                                             isRtl={this.props.isRtl}
                                             onClick={this.handleClickNew}
                                         >
@@ -436,6 +463,11 @@ class MenuBar extends React.Component {
                                                 />
                                             </MenuItem>
                                         )}</SB3Downloader>
+                                        <PiratesMenuItem>
+                                            <MenuItem>
+                                                {'Pirates?'}
+                                            </MenuItem>
+                                        </PiratesMenuItem>
                                     </MenuSection>
                                 </MenuBarMenu>
                             </div>
@@ -522,34 +554,6 @@ class MenuBar extends React.Component {
                             username={this.props.authorUsername}
                         />
                     ) : null)}
-                    <div className={classNames(styles.menuBarItem)}>
-                        {this.props.canShare ? (
-                            (this.props.isShowingProject || this.props.isUpdating) && (
-                                <ProjectWatcher onDoneUpdating={this.props.onSeeCommunity}>
-                                    {
-                                        waitForUpdate => (
-                                            <ShareButton
-                                                className={styles.menuBarButton}
-                                                isShared={this.props.isShared}
-                                                /* eslint-disable react/jsx-no-bind */
-                                                onClick={() => {
-                                                    this.handleClickShare(waitForUpdate);
-                                                }}
-                                                /* eslint-enable react/jsx-no-bind */
-                                            />
-                                        )
-                                    }
-                                </ProjectWatcher>
-                            )
-                        ) : (
-                            this.props.showComingSoon ? (
-                                <MenuBarItemTooltip id="share-button">
-                                    <ShareButton className={styles.menuBarButton} />
-                                </MenuBarItemTooltip>
-                            ) : []
-                        )}
-                        {this.props.canRemix ? remixButton : []}
-                    </div>
                     <div className={classNames(styles.menuBarItem, styles.communityButtonWrapper)}>
                         {this.props.enableCommunity ? (
                             (this.props.isShowingProject || this.props.isUpdating) && (
@@ -748,6 +752,7 @@ MenuBar.propTypes = {
     onClickLogin: PropTypes.func,
     onClickLogo: PropTypes.func,
     onClickNew: PropTypes.func,
+    onClickNewPirate: PropTypes.func,
     onClickRemix: PropTypes.func,
     onClickSave: PropTypes.func,
     onClickSaveAsCopy: PropTypes.func,
@@ -814,6 +819,7 @@ const mapDispatchToProps = dispatch => ({
     onClickLogin: () => dispatch(openLoginMenu()),
     onRequestCloseLogin: () => dispatch(closeLoginMenu()),
     onClickNew: needSave => dispatch(requestNewProject(needSave)),
+    onClickNewPirate: needSave => dispatch(requestNewPirateProject(needSave)),
     onClickRemix: () => dispatch(remixProject()),
     onClickSave: () => dispatch(manualUpdateProject()),
     onClickSaveAsCopy: () => dispatch(saveProjectAsCopy()),
