@@ -404,7 +404,7 @@ class MenuBar extends React.Component {
                                         <MenuItem
                                             onClick={this.handleClickNewPirate}
                                         >
-                                            {'Pirate Project'}
+                                            {'Pirate Project Starter'}
                                         </MenuItem>
                                     </MenuSection>
                                     <MenuSection>
@@ -463,11 +463,6 @@ class MenuBar extends React.Component {
                                                 />
                                             </MenuItem>
                                         )}</SB3Downloader>
-                                        <PiratesMenuItem>
-                                            <MenuItem>
-                                                {'Pirates?'}
-                                            </MenuItem>
-                                        </PiratesMenuItem>
                                     </MenuSection>
                                 </MenuBarMenu>
                             </div>

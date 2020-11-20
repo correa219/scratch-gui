@@ -2,7 +2,8 @@ import ScratchStorage from 'scratch-storage';
 
 import defaultProject from './default-project';
 // need to change to default-pirate-project but broken
-import defaultPirateProject from './default-pirate-project';
+// import defaultPirateProject from './default-pirate-project';
+import keyboardProject from './cdl-starters/2-keyboard';
 
 /**
  * Wrapper for ScratchStorage which adds default web sources.
@@ -75,7 +76,6 @@ class Storage extends ScratchStorage {
         console.log('we are translating')
         this.translator = translator;
         this.cacheDefaultProject();
-        // the below line is broken because the index file needed
         // hard boiled project
         this.cacheDefaultPirateProject();
     }
@@ -91,7 +91,7 @@ class Storage extends ScratchStorage {
     cacheDefaultPirateProject () {
         // eslint-disable-next-line
         console.log('caching the projects')
-        const defaultPirateProjectAssets = defaultPirateProject(this.translator);
+        const defaultPirateProjectAssets = keyboardProject(this.translator);
         defaultPirateProjectAssets.forEach(asset => {
             // eslint-disable-next-line
             console.log(asset)

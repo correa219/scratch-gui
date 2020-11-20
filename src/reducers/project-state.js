@@ -28,7 +28,7 @@ const defaultProjectId = '0'; // hardcoded id of default project
 // eslint-disable-next-line
 // const pirateProjectId = '1'; // hardcoded id of our cdl project
 
-const pirateProjectId = '1'; // cdl project for mouse conreolled
+const pirateProjectId = '2'; // cdl project for mouse conreolled
 
 const LoadingState = keyMirror({
     NOT_LOADED: null,
